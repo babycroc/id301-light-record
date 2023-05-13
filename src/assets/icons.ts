@@ -1,3 +1,5 @@
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+
 import HomeIcon from "@mui/icons-material/Home";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -12,6 +14,7 @@ import StopIcon from "@mui/icons-material/Stop";
 import AddIcon from "@mui/icons-material/Add";
 
 export {
+  MusicNoteIcon as MusicIcon,
   HomeIcon,
   QueueMusicIcon as PlaylistIcon,
   SettingsIcon,

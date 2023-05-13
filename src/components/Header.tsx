@@ -1,19 +1,21 @@
 import React from "react";
 import { styled } from "styled-components";
 
-import Logo from "../assets/react.svg";
+import { Icon } from "./Icon";
+import { MusicIcon } from "../assets/icons";
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 16px;
   height: 50px;
+  color: var(--primary);
 `;
 
 export const Header: React.FC = () => {
   return (
     <Container>
-      <img src={Logo} />
+      <Icon icon={MusicIcon} size={32} />
     </Container>
   );
 };
