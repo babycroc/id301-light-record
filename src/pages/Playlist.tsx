@@ -3,7 +3,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { styled } from "styled-components";
 
 import { db } from "../firebase";
-import { Record } from "../types";
+import { Song } from "../types";
 import { Card } from "../components/Card";
 import { Icon } from "../components/Icon";
 import { Cell } from "../components/Cell";
@@ -18,7 +18,7 @@ import {
 } from "../assets/icons";
 
 interface Props {
-  record: Record;
+  song: Song;
 }
 
 const Header = styled.div`
@@ -54,11 +54,11 @@ const ControlContainer = styled.div`
   gap: 16px;
 `;
 
-const PlaylistItem: React.FC<Props> = ({ record }) => {
+const PlaylistItem: React.FC<Props> = ({ song }) => {
   return (
     <Card>
       <Header>
-        {`${record.date.getFullYear()}.${record.date.getMonth()}.${record.date.getDate()}`}
+        {`${song.date.getFullYear()}.${song.date.getMonth()}.${song.date.getDate()}`}
         <IconContainer>
           <Icon icon={EditIcon} />
           <Icon icon={DeleteIcon} />
@@ -66,7 +66,7 @@ const PlaylistItem: React.FC<Props> = ({ record }) => {
       </Header>
 
       <CellContainer>
-        {record.sequence.map((color, index) => (
+        {song.melody.map((color, index) => (
           <Cell key={index} color={color} />
         ))}
       </CellContainer>
@@ -89,28 +89,28 @@ const Container = styled.div`
 `;
 
 export const Playlist: React.FC = () => {
-  const [records, setRecords] = useState<Record[]>([]);
-  const docRef = collection(db, "records");
+  const [playlist, setPlaylist] = useState<Song[]>([]);
+  const docRef = collection(db, "songs");
 
   useEffect(() => {
     onSnapshot(docRef, (snapshot) => {
-      const records = snapshot.docs.map((doc) => {
+      const playlist = snapshot.docs.map((doc) => {
         const id = doc.id;
         const data = doc.data();
         return {
           id: id,
           date: new Date(data.date.seconds * 1000),
-          sequence: data.sequence,
+          melody: data.melody,
         };
       });
-      setRecords(records);
+      setPlaylist(playlist);
     });
   });
 
   return (
     <Container>
-      {records.map((record, index) => (
-        <PlaylistItem key={index} record={record} />
+      {playlist.map((song, index) => (
+        <PlaylistItem key={index} song={song} />
       ))}
       <Button>
         <AddIcon />

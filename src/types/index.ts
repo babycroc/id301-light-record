@@ -9,8 +9,8 @@ export enum Color {
   "NONE",
 }
 
-export interface Record {
+export interface Song {
   id: string;
   date: Date;
-  sequence: Color[];
+  melody: Color[];
 }
