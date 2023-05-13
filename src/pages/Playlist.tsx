@@ -5,6 +5,7 @@ import { styled } from "styled-components";
 import { db } from "../firebase";
 import { Record } from "../types";
 import { Card } from "../components/Card";
+import { Icon } from "../components/Icon";
 import { Cell } from "../components/Cell";
 import { Button } from "../components/Button";
 import {
@@ -59,8 +60,8 @@ const PlaylistItem: React.FC<Props> = ({ record }) => {
       <Header>
         {`${record.date.getFullYear()}.${record.date.getMonth()}.${record.date.getDate()}`}
         <IconContainer>
-          <EditIcon />
-          <DeleteIcon />
+          <Icon icon={EditIcon} size={24} />
+          <Icon icon={DeleteIcon} size={24} />
         </IconContainer>
       </Header>
 
@@ -71,9 +72,9 @@ const PlaylistItem: React.FC<Props> = ({ record }) => {
       </CellContainer>
 
       <ControlContainer>
-        <PlayIcon />
-        <PauseIcon />
-        <StopIcon />
+        <Icon icon={PlayIcon} size={36} />
+        <Icon icon={PauseIcon} size={36} />
+        <Icon icon={StopIcon} size={36} />
       </ControlContainer>
     </Card>
   );

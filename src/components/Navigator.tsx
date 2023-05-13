@@ -1,13 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { SvgIconTypeMap } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "styled-components";
-import { SvgIconProps } from "@mui/material";
 
+import { Icon } from "./Icon";
 import { HomeIcon, PlaylistIcon, SettingsIcon } from "../assets/icons";
 
 interface Props {
   name: string;
-  icon: React.ReactElement<SvgIconProps>;
+  icon: OverridableComponent<SvgIconTypeMap>;
   to: string;
 }
 
@@ -20,7 +22,7 @@ const NavItem: React.FC<Props> = ({ name, icon, to }) => {
         isActive ? { color: "var(--primary)" } : { color: "var(--black)" }
       }
     >
-      {icon}
+      <Icon icon={icon} size={24} />
     </NavLink>
   );
 };
@@ -45,9 +47,9 @@ export const Navigator: React.FC = () => {
   return (
     <>
       <Container>
-        <NavItem name="playlist" icon={<PlaylistIcon />} to="/playlist" />
-        <NavItem name="home" icon={<HomeIcon />} to="/" />
-        <NavItem name="settings" icon={<SettingsIcon />} to="/settings" />
+        <NavItem name="playlist" icon={PlaylistIcon} to="/playlist" />
+        <NavItem name="home" icon={HomeIcon} to="/" />
+        <NavItem name="settings" icon={SettingsIcon} to="/settings" />
       </Container>
     </>
   );
