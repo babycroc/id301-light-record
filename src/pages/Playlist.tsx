@@ -60,14 +60,14 @@ const PlaylistItem: React.FC<Props> = ({ record }) => {
       <Header>
         {`${record.date.getFullYear()}.${record.date.getMonth()}.${record.date.getDate()}`}
         <IconContainer>
-          <Icon icon={EditIcon} size={24} />
-          <Icon icon={DeleteIcon} size={24} />
+          <Icon icon={EditIcon} />
+          <Icon icon={DeleteIcon} />
         </IconContainer>
       </Header>
 
       <CellContainer>
         {record.sequence.map((color, index) => (
-          <Cell key={index} size={24} color={color} />
+          <Cell key={index} color={color} />
         ))}
       </CellContainer>
 

@@ -43,11 +43,11 @@ const convertToHexColor = (color: Color) => {
 };
 
 interface Props {
-  size: number;
+  size?: number;
   color: Color;
 }
 
-export const Cell: React.FC<Props> = ({ size, color }) => {
+export const Cell: React.FC<Props> = ({ size = 24, color }) => {
   return (
     <Container
       style={{

@@ -22,7 +22,7 @@ const NavItem: React.FC<Props> = ({ name, icon, to }) => {
         isActive ? { color: "var(--primary)" } : { color: "var(--black)" }
       }
     >
-      <Icon icon={icon} size={24} />
+      <Icon icon={icon} />
     </NavLink>
   );
 };
