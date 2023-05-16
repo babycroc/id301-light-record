@@ -1,5 +1,11 @@
 import React from "react";
 
+import { Record } from "../components/Record";
+
 export const Home: React.FC = () => {
-  return <>Home</>;
+  return (
+    <>
+      <Record startDegree={0} />
+    </>
+  );
 };
