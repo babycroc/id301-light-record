@@ -43,7 +43,6 @@ export const Record: React.FC<Props> = ({ startDegree }) => {
   const degreeList = Array.from(Array(splitNum).keys()).map(
     (i) => (startDegree + (360 / splitNum) * i) % 360
   );
-  console.log(Array.from(Array(splitNum).keys()));
   return (
     <Container>
       {degreeList.map((degree, index) => (
