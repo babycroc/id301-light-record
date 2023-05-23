@@ -53,9 +53,9 @@ export const Home: React.FC = () => {
       <Record startDegree={0} song={song} />
 
       <ControlContainer>
-        <Icon icon={PlayIcon} size={36} />
-        <Icon icon={PauseIcon} size={36} />
-        <Icon icon={StopIcon} size={36} />
+        <Icon icon={PlayIcon} size={48} />
+        <Icon icon={PauseIcon} size={48} />
+        <Icon icon={StopIcon} size={48} />
       </ControlContainer>
     </Container>
   );
