@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 import { PieSVG } from "../assets/svg/Pie";
 import { convertToHexColor } from "../utils";
+import { Melody, Song } from "../types";
 
 interface PieProps {
   degree: number;
@@ -26,8 +27,10 @@ const Pie: React.FC<PieProps> = ({ degree, color }) => {
     </PieContainer>
   );
 };
+
 interface Props {
   startDegree: number;
+  song: Song;
 }
 
 const Container = styled.div`
@@ -38,20 +41,44 @@ const Container = styled.div`
   height: 600px;
 `;
 
-export const Record: React.FC<Props> = ({ startDegree }) => {
-  const splitNum = 16;
-  const degreeList = Array.from(Array(splitNum).keys()).map(
-    (i) => (startDegree + (360 / splitNum) * i) % 360
+export const Record: React.FC<Props> = ({ startDegree, song }) => {
+  const [melody, setMelody] = useState<Melody>([]);
+  useEffect(() => {
+    setMelody(song?.melody);
+  }, [song]);
+
+  const [initDegree, setInitDegree] = useState<number>((360 / 16) * 7);
+  const degreeList = Array.from(Array(melody?.length).keys()).map(
+    (i: number) => (initDegree + startDegree + (360 / 16) * i) % 360
   );
+
+  const [time, setTime] = useState(Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setInitDegree(initDegree + 360 / 16 / 100);
+      setTime(Date.now());
+    }, 1000 / 100);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [initDegree]);
+
+  const visibleDegree = (degree: number) => {
+    return degree >= 90 && degree <= 270 + 22.5;
+  };
+
   return (
     <Container>
-      {degreeList.map((degree, index) => (
-        <Pie
-          key={index}
-          degree={degree}
-          color={convertToHexColor(Math.floor(Math.random() * 8))} // TODO: apply real colors
-        />
-      ))}
+      {degreeList.map((degree, index) =>
+        visibleDegree(degree) && melody ? (
+          <Pie
+            key={index}
+            degree={degree}
+            color={convertToHexColor(melody[index])}
+          />
+        ) : null
+      )}
     </Container>
   );
 };

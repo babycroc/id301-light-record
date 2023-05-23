@@ -9,8 +9,10 @@ export enum Color {
   "NONE",
 }
 
+export type Melody = Color[];
+
 export interface Song {
   id: string;
   date: Date;
-  melody: Color[];
+  melody: Melody;
 }
