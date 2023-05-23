@@ -1,8 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
+import { styled } from "styled-components";
 
 import { db } from "../firebase";
+import { Song } from "../types";
 import { Record } from "../components/Record";
+import { Icon } from "../components/Icon";
+import { PlayIcon, PauseIcon, StopIcon } from "../assets/icons";
+
+const Container = styled.div`
+  position: relative;
+  height: calc(100vh - 108px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+`;
+
+const ControlContainer = styled.div`
+  position: absolute;
+  bottom: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 36px;
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 20px 32px;
+`;
 
 export const Home: React.FC = () => {
   const [song, setSong] = useState<Song>();
@@ -24,8 +49,14 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <Container>
       <Record startDegree={0} song={song} />
-    </>
+
+      <ControlContainer>
+        <Icon icon={PlayIcon} size={36} />
+        <Icon icon={PauseIcon} size={36} />
+        <Icon icon={StopIcon} size={36} />
+      </ControlContainer>
+    </Container>
   );
 };
