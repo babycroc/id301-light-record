@@ -30,7 +30,7 @@ const Pie: React.FC<PieProps> = ({ degree, color }) => {
 
 interface Props {
   startDegree: number;
-  song: Song;
+  song?: Song;
 }
 
 const Container = styled.div`
@@ -44,7 +44,7 @@ const Container = styled.div`
 export const Record: React.FC<Props> = ({ startDegree, song }) => {
   const [melody, setMelody] = useState<Melody>([]);
   useEffect(() => {
-    setMelody(song?.melody);
+    if (song) setMelody(song?.melody);
   }, [song]);
 
   const [initDegree, setInitDegree] = useState<number>((360 / 16) * 7);
