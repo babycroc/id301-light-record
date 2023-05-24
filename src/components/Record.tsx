@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 import { PieSVG } from "../assets/svg/Pie";
+import { PieOutlineSVG } from "../assets/svg/PieOutline";
 import { convertToHexColor } from "../utils";
 import { Melody, Song } from "../types";
 
@@ -22,9 +23,16 @@ const PieContainer = styled.div`
 
 const Pie: React.FC<PieProps> = ({ degree, color }) => {
   return (
-    <PieContainer style={{ transform: `rotate(${degree}deg)` }}>
-      <PieSVG color={color} />
-    </PieContainer>
+    <>
+      <PieContainer
+        style={{ zIndex: "10", transform: `rotate(${(360 / 16) * 9}deg)` }}
+      >
+        <PieOutlineSVG color="#000000" />
+      </PieContainer>
+      <PieContainer style={{ transform: `rotate(${degree}deg)` }}>
+        <PieSVG color={color} />
+      </PieContainer>
+    </>
   );
 };
 
@@ -71,7 +79,7 @@ export const Record: React.FC<Props> = ({ startDegree, song }) => {
   return (
     <Container>
       {degreeList.map((degree, index) =>
-        visibleDegree(degree) && melody ? (
+        /*visibleDegree(degree) &&*/ melody ? (
           <Pie
             key={index}
             degree={degree}
