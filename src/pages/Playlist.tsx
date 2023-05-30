@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { redirect } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { styled } from "styled-components";
 
@@ -112,7 +113,7 @@ export const Playlist: React.FC = () => {
       {playlist.map((song, index) => (
         <PlaylistItem key={index} song={song} />
       ))}
-      <Button>
+      <Button onClick={() => (window.location.href = "/playlist/create")}>
         <AddIcon />
       </Button>
     </Container>
