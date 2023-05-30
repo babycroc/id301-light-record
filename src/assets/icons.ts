@@ -13,6 +13,8 @@ import StopIcon from "@mui/icons-material/Stop";
 
 import AddIcon from "@mui/icons-material/Add";
 
+import CheckIcon from "@mui/icons-material/Check";
+
 export {
   MusicNoteIcon as MusicIcon,
   HomeIcon,
@@ -24,4 +26,5 @@ export {
   PauseIcon,
   StopIcon,
   AddIcon,
+  CheckIcon,
 };
