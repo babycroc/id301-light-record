@@ -50,7 +50,7 @@ const Container = styled.div`
   height: 600px;
 `;
 
-export const Record: React.FC<Props> = ({ startDegree, song }) => {
+export const Record: React.FC<Props> = ({ startDegree, song, play }) => {
   const [melody, setMelody] = useState<Melody>([]);
   useEffect(() => {
     if (song) setMelody(song?.melody);
@@ -64,14 +64,15 @@ export const Record: React.FC<Props> = ({ startDegree, song }) => {
   const [time, setTime] = useState(Date.now());
   useEffect(() => {
     const interval = setInterval(() => {
-      setInitDegree(initDegree + 360 / 16 / 100);
+      const dDegree = 360 / 16 / 100;
+      setInitDegree(initDegree + (play ? dDegree : 0));
       setTime(Date.now());
     }, 1000 / 100);
 
     return () => {
       clearInterval(interval);
     };
-  }, [initDegree]);
+  }, [initDegree, play]);
 
   const visibleDegree = (degree: number) => {
     return degree >= 90 && degree <= 270 + 22.5;
