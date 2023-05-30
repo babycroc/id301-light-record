@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { PieSVG } from "../assets/svg/Pie";
 import { PieOutlineSVG } from "../assets/svg/PieOutline";
 import { convertToHexColor } from "../utils";
-import { Melody, Song } from "../types";
+import { Melody } from "../types";
 
 interface PieProps {
   degree: number;
@@ -23,22 +23,15 @@ const PieContainer = styled.div`
 
 const Pie: React.FC<PieProps> = ({ degree, color }) => {
   return (
-    <>
-      <PieContainer
-        style={{ zIndex: "10", transform: `rotate(${(360 / 16) * 9}deg)` }}
-      >
-        <PieOutlineSVG color="#000000" />
-      </PieContainer>
-      <PieContainer style={{ transform: `rotate(${degree}deg)` }}>
-        <PieSVG color={color} />
-      </PieContainer>
-    </>
+    <PieContainer style={{ transform: `rotate(${degree}deg)` }}>
+      <PieSVG color={color} />
+    </PieContainer>
   );
 };
 
 interface Props {
   startDegree: number;
-  song?: Song;
+  melody?: Melody;
   play?: boolean;
 }
 
@@ -50,11 +43,15 @@ const Container = styled.div`
   height: 600px;
 `;
 
-export const Record: React.FC<Props> = ({ startDegree, song, play }) => {
+export const Record: React.FC<Props> = ({
+  startDegree,
+  melody: initMelody,
+  play,
+}) => {
   const [melody, setMelody] = useState<Melody>([]);
   useEffect(() => {
-    if (song) setMelody(song?.melody);
-  }, [song]);
+    if (initMelody) setMelody(initMelody);
+  }, [initMelody]);
 
   const [initDegree, setInitDegree] = useState<number>((360 / 16) * 7);
   const degreeList = Array.from(Array(melody?.length).keys()).map(
@@ -80,6 +77,11 @@ export const Record: React.FC<Props> = ({ startDegree, song, play }) => {
 
   return (
     <Container>
+      <PieContainer
+        style={{ zIndex: "10", transform: `rotate(${(360 / 16) * 9}deg)` }}
+      >
+        <PieOutlineSVG color="#000000" />
+      </PieContainer>
       {degreeList.map((degree, index) =>
         /*visibleDegree(degree) &&*/ melody ? (
           <Pie
