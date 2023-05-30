@@ -30,6 +30,8 @@ const ControlContainer = styled.div`
 `;
 
 export const Home: React.FC = () => {
+  const [play, setPlay] = useState<boolean>(false);
+
   const [song, setSong] = useState<Song>();
   const docRef = collection(db, "songs");
 
@@ -46,15 +48,25 @@ export const Home: React.FC = () => {
       });
       if (playlist.length >= 1) setSong(playlist[0]);
     });
-  }, []);
+  }, [docRef]);
 
   return (
     <Container>
-      <Record startDegree={0} song={song} />
+      <Record startDegree={0} song={song} play={play} />
 
       <ControlContainer>
-        <Icon icon={PlayIcon} size={48} />
-        <Icon icon={PauseIcon} size={48} />
+        <Icon
+          icon={PlayIcon}
+          size={48}
+          disabled={play}
+          onClick={() => setPlay(true)}
+        />
+        <Icon
+          icon={PauseIcon}
+          size={48}
+          disabled={!play}
+          onClick={() => setPlay(false)}
+        />
         <Icon icon={StopIcon} size={48} />
       </ControlContainer>
     </Container>

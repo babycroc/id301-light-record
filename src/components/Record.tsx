@@ -39,6 +39,7 @@ const Pie: React.FC<PieProps> = ({ degree, color }) => {
 interface Props {
   startDegree: number;
   song?: Song;
+  play?: boolean;
 }
 
 const Container = styled.div`
