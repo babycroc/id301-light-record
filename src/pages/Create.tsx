@@ -39,7 +39,7 @@ const IconContainer = styled.div`
 `;
 
 export const Create: React.FC = () => {
-  const [melody, setMelody] = useState<Melody>();
+  const [melody, setMelody] = useState<Melody>([]);
 
   return (
     <Container>

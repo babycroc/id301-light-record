@@ -30,6 +30,13 @@ const Pie: React.FC<PieProps> = ({ degree, color }) => {
     </PieContainer>
   );
 };
+const EmptyPie: React.FC<PieProps> = ({ degree }) => {
+  return (
+    <PieContainer style={{ transform: `rotate(${degree}deg)` }}>
+      <PieOutlineSVG weight={1} />
+    </PieContainer>
+  );
+};
 
 interface Props {
   type: "home" | "create";
@@ -49,7 +56,7 @@ const Container = styled.div`
 export const Record: React.FC<Props> = ({
   type,
   startDegree = 0,
-  melody = [Color.NONE],
+  melody = [],
   play = false,
 }) => {
   const [initDegree, setInitDegree] = useState<number>(startDegree);
@@ -72,21 +79,46 @@ export const Record: React.FC<Props> = ({
 
   return (
     <Container>
-      <PieContainer
-        style={{ zIndex: "10", transform: `rotate(${(360 / 16) * 9}deg)` }}
-      >
-        <PieOutlineSVG color="var(--black)" />
-      </PieContainer>
+      {type == "home" ? (
+        <PieContainer
+          style={{ zIndex: "10", transform: `rotate(${(360 / 16) * 9}deg)` }}
+        >
+          <PieOutlineSVG color="var(--black)" />
+        </PieContainer>
+      ) : null}
       {type == "home"
         ? Array(PIE_NUM / 2 + 1)
             .fill(0)
             .map((_, index) => {
-              const startIndex = index + Math.floor(initDegree / PIE_DEGREE);
+              const displayIndex = index + Math.floor(initDegree / PIE_DEGREE);
               return (
                 <Pie
-                  key={startIndex}
-                  degree={calcDegreeFromPos(startIndex)}
-                  color={convertToHexColor(melody[startIndex % melody.length])}
+                  key={index}
+                  degree={calcDegreeFromPos(displayIndex)}
+                  color={convertToHexColor(
+                    melody[displayIndex % melody.length]
+                  )}
+                />
+              );
+            })
+        : null}
+      {type == "create"
+        ? melody
+            .concat(Array(PIE_NUM / 2 + 1).fill(Color.NONE))
+            .slice(0, PIE_NUM / 2 + 1)
+            .map((color, index) => {
+              const displayIndex = index + Math.floor(initDegree / PIE_DEGREE);
+
+              return color == Color.NONE ? (
+                <EmptyPie
+                  key={index}
+                  degree={calcDegreeFromPos(displayIndex)}
+                />
+              ) : (
+                <Pie
+                  key={index}
+                  degree={calcDegreeFromPos(displayIndex)}
+                  color={convertToHexColor(color)}
                 />
               );
             })
