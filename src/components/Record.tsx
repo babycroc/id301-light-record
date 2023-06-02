@@ -4,11 +4,13 @@ import { styled } from "styled-components";
 import { PieSVG } from "../assets/svg/Pie";
 import { PieOutlineSVG } from "../assets/svg/PieOutline";
 import { convertToHexColor } from "../utils";
-import { Melody } from "../types";
+import { Color, Melody } from "../types";
+import { PIE_NUM, PIE_DEGREE } from "../consts";
 
 interface PieProps {
   degree: number;
-  color: string;
+  color?: string;
+  weight?: number;
 }
 
 const PieContainer = styled.div`
@@ -30,7 +32,8 @@ const Pie: React.FC<PieProps> = ({ degree, color }) => {
 };
 
 interface Props {
-  startDegree: number;
+  type: "home" | "create";
+  startDegree?: number;
   melody?: Melody;
   play?: boolean;
 }
@@ -44,24 +47,20 @@ const Container = styled.div`
 `;
 
 export const Record: React.FC<Props> = ({
-  startDegree,
-  melody: initMelody,
-  play,
+  type,
+  startDegree = 0,
+  melody = [Color.NONE],
+  play = false,
 }) => {
-  const [melody, setMelody] = useState<Melody>([]);
-  useEffect(() => {
-    if (initMelody) setMelody(initMelody);
-  }, [initMelody]);
-
-  const [initDegree, setInitDegree] = useState<number>((360 / 16) * 7);
-  const degreeList = Array.from(Array(melody?.length).keys()).map(
-    (i: number) => (initDegree + startDegree + (360 / 16) * i) % 360
-  );
+  const [initDegree, setInitDegree] = useState<number>(startDegree);
+  const calcDegreeFromPos = (position: number) => {
+    return initDegree + PIE_DEGREE * (12 - position);
+  };
 
   const [time, setTime] = useState(Date.now());
   useEffect(() => {
     const interval = setInterval(() => {
-      const dDegree = 360 / 16 / 100;
+      const dDegree = PIE_DEGREE / 100;
       setInitDegree(initDegree + (play ? dDegree : 0));
       setTime(Date.now());
     }, 1000 / 100);
@@ -71,26 +70,27 @@ export const Record: React.FC<Props> = ({
     };
   }, [initDegree, play]);
 
-  const visibleDegree = (degree: number) => {
-    return degree >= 90 && degree <= 270 + 22.5;
-  };
-
   return (
     <Container>
       <PieContainer
         style={{ zIndex: "10", transform: `rotate(${(360 / 16) * 9}deg)` }}
       >
-        <PieOutlineSVG color="#000000" />
+        <PieOutlineSVG color="var(--black)" />
       </PieContainer>
-      {degreeList.map((degree, index) =>
-        /*visibleDegree(degree) &&*/ melody ? (
-          <Pie
-            key={index}
-            degree={degree}
-            color={convertToHexColor(melody[index])}
-          />
-        ) : null
-      )}
+      {type == "home"
+        ? Array(PIE_NUM / 2 + 1)
+            .fill(0)
+            .map((_, index) => {
+              const startIndex = index + Math.floor(initDegree / PIE_DEGREE);
+              return (
+                <Pie
+                  key={startIndex}
+                  degree={calcDegreeFromPos(startIndex)}
+                  color={convertToHexColor(melody[startIndex % melody.length])}
+                />
+              );
+            })
+        : null}
     </Container>
   );
 };

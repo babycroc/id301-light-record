@@ -52,7 +52,7 @@ export const Home: React.FC = () => {
 
   return (
     <Container>
-      <Record startDegree={0} melody={song?.melody} play={play} />
+      <Record type="home" melody={song?.melody} play={play} />
 
       <ControlContainer>
         <Icon

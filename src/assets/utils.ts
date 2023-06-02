@@ -2,6 +2,8 @@ import React from "react";
 
 interface Props {
   color?: string;
+  stroke?: string;
+  weight?: number;
 }
 
 export const asset =

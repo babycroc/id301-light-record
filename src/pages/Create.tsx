@@ -43,7 +43,7 @@ export const Create: React.FC = () => {
 
   return (
     <Container>
-      <Record startDegree={0} melody={melody} />
+      <Record type="create" melody={melody} />
 
       <ControlContainer>
         {Object.values(Color)
