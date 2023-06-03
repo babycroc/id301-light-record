@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 import { PieSVG } from "../assets/svg/Pie";
-import { PieOutlineSVG } from "../assets/svg/PieOutline";
 import { convertToHexColor } from "../utils";
 import { Color, Melody } from "../types";
 import { PIE_NUM, PIE_DEGREE } from "../consts";
@@ -10,30 +9,36 @@ import { PIE_NUM, PIE_DEGREE } from "../consts";
 interface PieProps {
   degree: number;
   color?: string;
+  stroke?: string;
   weight?: number;
+  top?: boolean;
+  onDragOver?: React.DragEventHandler<SVGUseElement>;
+  onDrop?: React.DragEventHandler<SVGUseElement>;
 }
 
-const PieContainer = styled.div`
+const PieContainer = styled.div<PieProps>`
   position: absolute;
+  top: 144px;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  width: 600px;
-  height: 600px;
-  padding-bottom: 300px;
+  margin-left: 50%;
+  transform-origin: bottom left;
+  transform: ${(props) => `rotate(${props.degree}deg)`};
+  z-index: ${(props) => (props.top ? "10" : "")};
 `;
 
-const Pie: React.FC<PieProps> = ({ degree, color }) => {
+const Pie: React.FC<PieProps> = ({
+  degree,
+  color,
+  stroke,
+  weight,
+  top,
+  ...props
+}) => {
   return (
-    <PieContainer style={{ transform: `rotate(${degree}deg)` }}>
-      <PieSVG color={color} />
-    </PieContainer>
-  );
-};
-const EmptyPie: React.FC<PieProps> = ({ degree }) => {
-  return (
-    <PieContainer style={{ transform: `rotate(${degree}deg)` }}>
-      <PieOutlineSVG weight={1} />
+    <PieContainer degree={degree} top={top}>
+      <PieSVG color={color} stroke={stroke} weight={weight} {...props} />
     </PieContainer>
   );
 };
@@ -56,9 +61,14 @@ const Container = styled.div`
 export const Record: React.FC<Props> = ({
   type,
   startDegree = 0,
-  melody = [],
+  melody: initMelody = [],
   play = false,
 }) => {
+  const [melody, setMelody] = useState<Color[]>(initMelody);
+  useEffect(() => {
+    setMelody(initMelody);
+  }, [initMelody]);
+
   const [initDegree, setInitDegree] = useState<number>(startDegree);
   const calcDegreeFromPos = (position: number) => {
     return initDegree + PIE_DEGREE * (12 - position);
@@ -77,14 +87,32 @@ export const Record: React.FC<Props> = ({
     };
   }, [initDegree, play]);
 
+  const onDragOver = (event: React.DragEvent<SVGUseElement>) => {
+    event.preventDefault();
+  };
+  const onDrop = async (
+    event: React.DragEvent<SVGUseElement>,
+    index: number
+  ) => {
+    const color = event.dataTransfer.getData("color");
+    const numCells = index > melody.length ? index - melody.length + 1 : 1;
+    setMelody(
+      melody
+        .concat(new Array(numCells).fill(Color.NONE))
+        .map((item, idx) => (idx == index ? (parseInt(color) as Color) : item))
+    );
+  };
+
   return (
     <Container>
       {type == "home" ? (
-        <PieContainer
-          style={{ zIndex: "10", transform: `rotate(${(360 / 16) * 9}deg)` }}
-        >
-          <PieOutlineSVG color="var(--black)" />
-        </PieContainer>
+        <Pie
+          degree={PIE_DEGREE * 9}
+          color="none"
+          stroke="var(--black)"
+          weight={10}
+          top={true}
+        />
       ) : null}
       {type == "home"
         ? Array(PIE_NUM / 2 + 1)
@@ -108,17 +136,21 @@ export const Record: React.FC<Props> = ({
             .slice(0, PIE_NUM / 2 + 1)
             .map((color, index) => {
               const displayIndex = index + Math.floor(initDegree / PIE_DEGREE);
-
-              return color == Color.NONE ? (
-                <EmptyPie
-                  key={index}
-                  degree={calcDegreeFromPos(displayIndex)}
-                />
-              ) : (
+              return (
                 <Pie
                   key={index}
                   degree={calcDegreeFromPos(displayIndex)}
-                  color={convertToHexColor(color)}
+                  color={
+                    color == Color.NONE
+                      ? "var(--white)"
+                      : convertToHexColor(color)
+                  }
+                  stroke={color == Color.NONE ? "var(--black)" : "none"}
+                  weight={color == Color.NONE ? 3 : 0}
+                  onDragOver={onDragOver}
+                  onDrop={(event: React.DragEvent<SVGUseElement>) =>
+                    onDrop(event, index)
+                  }
                 />
               );
             })

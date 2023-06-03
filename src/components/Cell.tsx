@@ -12,9 +12,10 @@ const Container = styled.div`
 interface Props {
   size?: number;
   color: Color;
+  onDragStart?: React.DragEventHandler<HTMLDivElement>;
 }
 
-export const Cell: React.FC<Props> = ({ size = 24, color }) => {
+export const Cell: React.FC<Props> = ({ size = 24, color, ...props }) => {
   return (
     <Container
       style={{
@@ -24,6 +25,7 @@ export const Cell: React.FC<Props> = ({ size = 24, color }) => {
         height: `${size}px`,
         backgroundColor: convertToHexColor(color),
       }}
+      {...props}
     />
   );
 };

@@ -41,6 +41,13 @@ const IconContainer = styled.div`
 export const Create: React.FC = () => {
   const [melody, setMelody] = useState<Melody>([]);
 
+  const onDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    color: Color
+  ) => {
+    event.dataTransfer.setData("color", color.toString());
+  };
+
   return (
     <Container>
       <Record type="create" melody={melody} />
@@ -49,7 +56,14 @@ export const Create: React.FC = () => {
         {Object.values(Color)
           .filter((v) => !isNaN(Number(v)))
           .map((color, index) => (
-            <Cell key={index} size={40} color={color as Color} />
+            <Cell
+              key={index}
+              size={40}
+              color={color as Color}
+              onDragStart={(event: React.DragEvent<HTMLDivElement>) =>
+                onDragStart(event, color as Color)
+              }
+            />
           ))}
         <IconContainer>
           <Icon icon={CheckIcon} size={24} />

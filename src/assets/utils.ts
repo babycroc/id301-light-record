@@ -4,6 +4,8 @@ interface Props {
   color?: string;
   stroke?: string;
   weight?: number;
+  onDragOver?: React.DragEventHandler<SVGUseElement>;
+  onDrop?: React.DragEventHandler<SVGUseElement>;
 }
 
 export const asset =

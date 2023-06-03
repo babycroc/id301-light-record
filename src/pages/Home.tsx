@@ -36,8 +36,8 @@ export const Home: React.FC = () => {
   const docRef = collection(db, "songs");
 
   useEffect(() => {
-    onSnapshot(docRef, (snapshot) => {
-      const playlist = snapshot.docs.map((doc) => {
+    onSnapshot(docRef, (snapshot: any) => {
+      const playlist = snapshot.docs.map((doc: any) => {
         const id = doc.id;
         const data = doc.data();
         return {
