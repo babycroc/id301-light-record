@@ -12,7 +12,9 @@ const Container = styled.div`
 interface Props {
   size?: number;
   color: Color;
+  draggable?: boolean;
   onDragStart?: React.DragEventHandler<HTMLDivElement>;
+  // onTouchStart?: React.TouchEventHandler<HTMLDivElement>;
 }
 
 export const Cell: React.FC<Props> = ({ size = 24, color, ...props }) => {

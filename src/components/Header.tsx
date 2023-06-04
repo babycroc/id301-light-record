@@ -10,6 +10,7 @@ const Container = styled.div`
   padding-top: 16px;
   height: 50px;
   color: var(--primary);
+  // margin-top: -50px;
 `;
 
 export const Header: React.FC = () => {

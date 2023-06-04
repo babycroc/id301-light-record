@@ -46,7 +46,14 @@ export const Create: React.FC = () => {
     color: Color
   ) => {
     event.dataTransfer.setData("color", color.toString());
+    // localStorage.setItem("color", color.toString());
   };
+  // const onTouchStart = (
+  //   event: React.TouchEvent<HTMLDivElement>,
+  //   color: Color
+  // ) => {
+  //   localStorage.setItem("color", color.toString());
+  // };
 
   return (
     <Container>
@@ -60,9 +67,13 @@ export const Create: React.FC = () => {
               key={index}
               size={40}
               color={color as Color}
+              draggable={true}
               onDragStart={(event: React.DragEvent<HTMLDivElement>) =>
                 onDragStart(event, color as Color)
               }
+              // onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {
+              //   onTouchStart(event, color as Color);
+              // }}
             />
           ))}
         <IconContainer>

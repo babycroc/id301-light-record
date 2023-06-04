@@ -14,6 +14,8 @@ interface PieProps {
   top?: boolean;
   onDragOver?: React.DragEventHandler<SVGUseElement>;
   onDrop?: React.DragEventHandler<SVGUseElement>;
+  // onTouchMove?: React.TouchEventHandler<SVGUseElement>;
+  // onTouchEnd?: React.TouchEventHandler<SVGUseElement>;
 }
 
 const PieContainer = styled.div<PieProps>`
@@ -102,6 +104,25 @@ export const Record: React.FC<Props> = ({
         .map((item, idx) => (idx == index ? (parseInt(color) as Color) : item))
     );
   };
+  // const onTouchMove = (event: React.TouchEvent<SVGUseElement>) => {
+  //   event.preventDefault();
+  // };
+  // const onTouchEnd = async (
+  //   event: React.TouchEvent<SVGUseElement>,
+  //   index: number
+  // ) => {
+  //   const color = localStorage.getItem("color");
+  //   if (color) {
+  //     const numCells = index > melody.length ? index - melody.length + 1 : 1;
+  //     setMelody(
+  //       melody
+  //         .concat(new Array(numCells).fill(Color.NONE))
+  //         .map((item, idx) =>
+  //           idx == index ? (parseInt(color) as Color) : item
+  //         )
+  //     );
+  //   }
+  // };
 
   return (
     <Container>
@@ -151,6 +172,10 @@ export const Record: React.FC<Props> = ({
                   onDrop={(event: React.DragEvent<SVGUseElement>) =>
                     onDrop(event, index)
                   }
+                  // onTouchMove={onTouchMove}
+                  // onTouchEnd={(event: React.TouchEvent<SVGUseElement>) =>
+                  //   onTouchEnd(event, index)
+                  // }
                 />
               );
             })

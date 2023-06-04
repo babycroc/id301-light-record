@@ -6,6 +6,8 @@ interface Props {
   weight?: number;
   onDragOver?: React.DragEventHandler<SVGUseElement>;
   onDrop?: React.DragEventHandler<SVGUseElement>;
+  // onTouchMove?: React.TouchEventHandler<SVGUseElement>;
+  // onTouchEnd?: React.TouchEventHandler<SVGUseElement>;
 }
 
 export const asset =
