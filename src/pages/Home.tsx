@@ -7,6 +7,7 @@ import { Song } from "../types";
 import { Record } from "../components/Record";
 import { Icon } from "../components/Icon";
 import { PlayIcon, PauseIcon, StopIcon } from "../assets/icons";
+import { socket } from "../socket";
 
 const Container = styled.div`
   position: relative;
@@ -50,6 +51,11 @@ export const Home: React.FC = () => {
     });
   }, [docRef]);
 
+  const handlePlay = (play: boolean) => {
+    socket.emit("play_record", play);
+    setPlay(play);
+  };
+
   return (
     <Container>
       <Record type="home" melody={song?.melody} play={play} />
@@ -59,13 +65,13 @@ export const Home: React.FC = () => {
           icon={PlayIcon}
           size={48}
           disabled={play}
-          onClick={() => setPlay(true)}
+          onClick={() => handlePlay(true)}
         />
         <Icon
           icon={PauseIcon}
           size={48}
           disabled={!play}
-          onClick={() => setPlay(false)}
+          onClick={() => handlePlay(false)}
         />
         <Icon icon={StopIcon} size={48} />
       </ControlContainer>

@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { PieSVG } from "../assets/svg/Pie";
 import { convertToHexColor } from "../utils";
 import { Color, Melody } from "../types";
-import { PIE_NUM, PIE_DEGREE } from "../consts";
+import { PIE_NUM, PIE_DEGREE, STEPPER_TOTAL_STEPS } from "../consts";
 
 interface PieProps {
   degree: number;
@@ -78,11 +78,12 @@ export const Record: React.FC<Props> = ({
 
   const [time, setTime] = useState(Date.now());
   useEffect(() => {
+    const dt = STEPPER_TOTAL_STEPS / PIE_NUM;
     const interval = setInterval(() => {
-      const dDegree = PIE_DEGREE / 100;
+      const dDegree = PIE_DEGREE / dt;
       setInitDegree(initDegree + (play ? dDegree : 0));
       setTime(Date.now());
-    }, 1000 / 100);
+    }, 10);
 
     return () => {
       clearInterval(interval);
