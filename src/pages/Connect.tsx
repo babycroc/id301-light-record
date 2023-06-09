@@ -34,10 +34,10 @@ export const Connect: React.FC = () => {
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (deviceCache) {
+    if (deviceCache && characteristicCache) {
       navigate("/");
     }
-  }, [deviceCache, navigate]);
+  }, [deviceCache, characteristicCache, navigate]);
 
   const connectBluetooth = () => {
     connect(

@@ -9,29 +9,29 @@ export const connect = async (
     characteristicCache: BluetoothRemoteGATTCharacteristic | null
   ) => void
 ) => {
-  return await (deviceCache
-    ? Promise.resolve(deviceCache)
-    : requestBluetoothDevice(
-        deviceCache,
+  deviceCache
+    ? await Promise.resolve(deviceCache)
+    : await requestBluetoothDevice(
         setDeviceCache,
         characteristicCache,
         setCharacteristiceCache
       )
-  )
-    ?.then((device: BluetoothDevice | null) =>
-      device
-        ? connectDeviceAndCacheCharacteristic(
-            device,
-            characteristicCache,
-            setCharacteristiceCache
-          )
-        : null
-    )
-    ?.then(
-      (characteristic: BluetoothRemoteGATTCharacteristic | undefined | null) =>
-        characteristic ? startNotifications(characteristic) : null
-    )
-    .catch((error: string) => log(error));
+        ?.then(async (device: BluetoothDevice) =>
+          device
+            ? await connectDeviceAndCacheCharacteristic(
+                device,
+                characteristicCache,
+                setCharacteristiceCache
+              )
+            : null
+        )
+        ?.then(
+          async (
+            characteristic: BluetoothRemoteGATTCharacteristic | undefined | null
+          ) =>
+            characteristic ? await startNotifications(characteristic) : null
+        )
+        .catch((error: string) => log(error));
 };
 
 // Disconnect from the connected device
@@ -73,17 +73,14 @@ export const disconnect = (
 // Handle form submit event
 export const submit = (
   event: FormEvent,
-  inputField: HTMLInputElement,
+  value: string,
   characteristicCache: BluetoothRemoteGATTCharacteristic | null
 ) => {
   event.preventDefault(); // Prevent form sending
-  send(inputField?.value, characteristicCache); // Send text field contents
-  inputField.value = ""; // Zero text field
-  inputField?.focus(); // Focus on text field
+  send(value, characteristicCache); // Send text field contents
 };
 
-const requestBluetoothDevice = (
-  deviceCache: BluetoothDevice | null,
+const requestBluetoothDevice = async (
   setDeviceCache: (deviceCache: BluetoothDevice | null) => void,
   characteristicCache: BluetoothRemoteGATTCharacteristic | null,
   setCharacteristiceCache: (
@@ -92,30 +89,21 @@ const requestBluetoothDevice = (
 ) => {
   log("Requesting bluetooth device...");
 
-  return (
-    navigator.bluetooth &&
-    navigator.bluetooth
-      .requestDevice({
-        filters: [{ services: [0xffe0] }],
-      })
-      .then((device) => {
-        log('"' + device.name + '" bluetooth device selected');
-        setDeviceCache(device);
+  return await navigator.bluetooth
+    .requestDevice({
+      filters: [{ services: [0xffe0] }],
+    })
+    .then((device: BluetoothDevice) => {
+      log('"' + device.name + '" bluetooth device selected');
+      setDeviceCache(device);
 
-        // Added line
-        deviceCache?.addEventListener(
-          "gattserverdisconnected",
-          (event: Event) =>
-            handleDisconnection(
-              event,
-              characteristicCache,
-              setCharacteristiceCache
-            )
-        );
+      // Added line
+      device?.addEventListener("gattserverdisconnected", (event: Event) =>
+        handleDisconnection(event, characteristicCache, setCharacteristiceCache)
+      );
 
-        return deviceCache;
-      })
-  );
+      return device;
+    });
 };
 
 // Connect to the device specified, get service and characteristic
