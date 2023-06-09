@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { redirect } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { styled } from "styled-components";
 

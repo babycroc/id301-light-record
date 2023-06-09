@@ -76,7 +76,7 @@ export const Record: React.FC<Props> = ({
     return initDegree + PIE_DEGREE * (12 - position);
   };
 
-  const [time, setTime] = useState(Date.now());
+  const [_, setTime] = useState(Date.now());
   useEffect(() => {
     const interval = setInterval(() => {
       const dDegree = PIE_DEGREE / 100;
