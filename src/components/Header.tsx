@@ -16,7 +16,11 @@ const Container = styled.div`
 export const Header: React.FC = () => {
   return (
     <Container>
-      <Icon icon={MusicIcon} size={32} />
+      <Icon
+        icon={MusicIcon}
+        size={32}
+        onClick={() => (window.location.href = "/")}
+      />
     </Container>
   );
 };
