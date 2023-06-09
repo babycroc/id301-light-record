@@ -1,7 +1,7 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { Create, Home, Playlist, Settings } from "./pages";
+import { Create, Connect, Home, Playlist, Settings } from "./pages";
 import { Layout } from "./components/Layout";
 
 const router = createBrowserRouter([
@@ -19,6 +19,10 @@ const router = createBrowserRouter([
       },
       { path: "settings", element: <Settings /> },
     ],
+  },
+  {
+    path: "/connect",
+    element: <Connect />,
   },
 ]);
 
