@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { styled } from "styled-components";
 
@@ -91,6 +92,7 @@ const Container = styled.div`
 export const Playlist: React.FC = () => {
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const docRef = collection(db, "songs");
+  const navigate = useNavigate();
 
   useEffect(() => {
     onSnapshot(docRef, (snapshot) => {
@@ -112,7 +114,7 @@ export const Playlist: React.FC = () => {
       {playlist.map((song, index) => (
         <PlaylistItem key={index} song={song} />
       ))}
-      <Button onClick={() => (window.location.href = "/playlist/create")}>
+      <Button onClick={() => navigate("/playlist/create")}>
         <AddIcon />
       </Button>
     </Container>

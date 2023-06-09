@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 import { Icon } from "./Icon";
@@ -14,13 +15,11 @@ const Container = styled.div`
 `;
 
 export const Header: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <Container>
-      <Icon
-        icon={MusicIcon}
-        size={32}
-        onClick={() => (window.location.href = "/")}
-      />
+      <Icon icon={MusicIcon} size={32} onClick={() => navigate("/")} />
     </Container>
   );
 };

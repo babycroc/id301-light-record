@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 import { Icon } from "../components/Icon";
@@ -31,11 +32,12 @@ export const Connect: React.FC = () => {
     setCharacteristiceCache,
   } = useBluetoothState((state: BluetoothState) => state);
 
+  const navigate = useNavigate();
   useEffect(() => {
     if (deviceCache) {
-      window.location.href = "/";
+      navigate("/");
     }
-  }, [deviceCache]);
+  }, [deviceCache, navigate]);
 
   const connectBluetooth = () => {
     connect(
