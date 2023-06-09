@@ -5,7 +5,7 @@ import { Icon } from "../components/Icon";
 import { MusicIcon } from "../assets/icons";
 import { Button } from "../components/Button";
 import { connect } from "../bluetooth";
-import { useBluetoothState } from "../state/bluetooth";
+import { BluetoothState, useBluetoothState } from "../state/bluetooth";
 
 const Container = styled.div`
   position: relative;
@@ -29,7 +29,7 @@ export const Connect: React.FC = () => {
     setDeviceCache,
     characteristicCache,
     setCharacteristiceCache,
-  } = useBluetoothState((state) => state);
+  } = useBluetoothState((state: BluetoothState) => state);
 
   useEffect(() => {
     if (deviceCache) {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface BluetoothState {
+export interface BluetoothState {
   deviceCache: BluetoothDevice | null;
   setDeviceCache: (deviceCache: BluetoothDevice | null) => void;
   characteristicCache: BluetoothRemoteGATTCharacteristic | null;
