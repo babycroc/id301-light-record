@@ -24,7 +24,7 @@ export const Settings: React.FC = () => {
     setCommand((event.target as HTMLInputElement)?.value);
   };
   const onSubmit = (event: FormEvent) => {
-    submit(event, command, characteristicCache);
+    submit(command, characteristicCache, event);
     setCommand("");
   };
 

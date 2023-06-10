@@ -7,6 +7,8 @@ import { Song } from "../types";
 import { Record } from "../components/Record";
 import { Icon } from "../components/Icon";
 import { PlayIcon, PauseIcon, StopIcon } from "../assets/icons";
+import { submit } from "../bluetooth";
+import { BluetoothState, useBluetoothState } from "../state/bluetooth";
 
 const Container = styled.div`
   position: relative;
@@ -50,22 +52,31 @@ export const Home: React.FC = () => {
     });
   }, [docRef]);
 
+  const { characteristicCache } = useBluetoothState(
+    (state: BluetoothState) => state
+  );
+
+  const playRecord = () => {
+    setPlay(true);
+    submit("PLAY", characteristicCache);
+  };
+
+  const pauseRecord = () => {
+    setPlay(false);
+    submit("PAUSE", characteristicCache);
+  };
+
   return (
     <Container>
       <Record type="home" melody={song?.melody} play={play} />
 
       <ControlContainer>
-        <Icon
-          icon={PlayIcon}
-          size={48}
-          disabled={play}
-          onClick={() => setPlay(true)}
-        />
+        <Icon icon={PlayIcon} size={48} disabled={play} onClick={playRecord} />
         <Icon
           icon={PauseIcon}
           size={48}
           disabled={!play}
-          onClick={() => setPlay(false)}
+          onClick={pauseRecord}
         />
         <Icon icon={StopIcon} size={48} />
       </ControlContainer>

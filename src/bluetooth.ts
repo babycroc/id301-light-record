@@ -72,11 +72,11 @@ export const disconnect = (
 
 // Handle form submit event
 export const submit = (
-  event: FormEvent,
   value: string,
-  characteristicCache: BluetoothRemoteGATTCharacteristic | null
+  characteristicCache: BluetoothRemoteGATTCharacteristic | null,
+  event?: FormEvent
 ) => {
-  event.preventDefault(); // Prevent form sending
+  event?.preventDefault(); // Prevent form sending
   send(value, characteristicCache); // Send text field contents
 };
 
