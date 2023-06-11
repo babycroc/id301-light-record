@@ -49,6 +49,7 @@ interface Props {
   type: "home" | "create";
   startDegree?: number;
   melody?: Melody;
+  setMelody?: (melody: Melody) => void;
   play?: boolean;
 }
 
@@ -63,13 +64,11 @@ const Container = styled.div`
 export const Record: React.FC<Props> = ({
   type,
   startDegree = 0,
-  melody: initMelody = [],
+  melody = [],
+  setMelody,
   play = false,
 }) => {
-  const [melody, setMelody] = useState<Color[]>(initMelody);
-  useEffect(() => {
-    setMelody(initMelody);
-  }, [initMelody]);
+  const [displayMelody, setDisplayMelody] = useState<Melody>(melody);
 
   const [initDegree, setInitDegree] = useState<number>(startDegree);
   const calcDegreeFromPos = (position: number) => {
@@ -89,6 +88,17 @@ export const Record: React.FC<Props> = ({
     };
   }, [initDegree, play]);
 
+  useEffect(() => {
+    if (type == "create") {
+      setInitDegree(startDegree);
+      setDisplayMelody(
+        melody
+          .slice(Math.floor(startDegree / PIE_DEGREE))
+          .slice(0, PIE_NUM / 2 + 1)
+      );
+    }
+  }, [type, melody, startDegree]);
+
   const onDragOver = (event: React.DragEvent<SVGUseElement>) => {
     event.preventDefault();
   };
@@ -97,12 +107,14 @@ export const Record: React.FC<Props> = ({
     index: number
   ) => {
     const color = event.dataTransfer.getData("color");
-    const numCells = index > melody.length ? index - melody.length + 1 : 1;
-    setMelody(
-      melody
-        .concat(new Array(numCells).fill(Color.NONE))
-        .map((item, idx) => (idx == index ? (parseInt(color) as Color) : item))
-    );
+    if (setMelody)
+      setMelody(
+        melody.map((item, idx) =>
+          idx == index + Math.floor(initDegree / PIE_DEGREE)
+            ? (parseInt(color) as Color)
+            : item
+        )
+      );
   };
   // const onTouchMove = (event: React.TouchEvent<SVGUseElement>) => {
   //   event.preventDefault();
@@ -152,33 +164,30 @@ export const Record: React.FC<Props> = ({
             })
         : null}
       {type == "create"
-        ? melody
-            .concat(Array(PIE_NUM / 2 + 1).fill(Color.NONE))
-            .slice(0, PIE_NUM / 2 + 1)
-            .map((color, index) => {
-              const displayIndex = index + Math.floor(initDegree / PIE_DEGREE);
-              return (
-                <Pie
-                  key={index}
-                  degree={calcDegreeFromPos(displayIndex)}
-                  color={
-                    color == Color.NONE
-                      ? "var(--white)"
-                      : convertToHexColor(color)
-                  }
-                  stroke={color == Color.NONE ? "var(--black)" : "none"}
-                  weight={color == Color.NONE ? 3 : 0}
-                  onDragOver={onDragOver}
-                  onDrop={(event: React.DragEvent<SVGUseElement>) =>
-                    onDrop(event, index)
-                  }
-                  // onTouchMove={onTouchMove}
-                  // onTouchEnd={(event: React.TouchEvent<SVGUseElement>) =>
-                  //   onTouchEnd(event, index)
-                  // }
-                />
-              );
-            })
+        ? displayMelody.map((color, index) => {
+            const displayIndex = index + Math.floor(initDegree / PIE_DEGREE);
+            return (
+              <Pie
+                key={index}
+                degree={calcDegreeFromPos(displayIndex)}
+                color={
+                  color == Color.NONE
+                    ? "var(--white)"
+                    : convertToHexColor(color)
+                }
+                stroke={color == Color.NONE ? "var(--black)" : "none"}
+                weight={color == Color.NONE ? 3 : 0}
+                onDragOver={onDragOver}
+                onDrop={(event: React.DragEvent<SVGUseElement>) =>
+                  onDrop(event, index)
+                }
+                // onTouchMove={onTouchMove}
+                // onTouchEnd={(event: React.TouchEvent<SVGUseElement>) =>
+                //   onTouchEnd(event, index)
+                // }
+              />
+            );
+          })
         : null}
     </Container>
   );
