@@ -22,8 +22,8 @@ interface PieProps {
 
 const PieContainer = styled.div.attrs((props) => ({
   style: {
-    transform: `rotate(${props.degree}deg)`,
-    zIndex: `${props.top ? "10" : ""}`,
+    transform: `rotate(${props.key}deg)`,
+    zIndex: `${props.id}`,
   },
 }))`
   position: absolute;
@@ -44,7 +44,7 @@ const Pie: React.FC<PieProps> = ({
   ...props
 }) => {
   return (
-    <PieContainer degree={degree} top={top}>
+    <PieContainer key={degree} id={top ? "10" : ""}>
       <PieSVG color={color} stroke={stroke} weight={weight} {...props} />
     </PieContainer>
   );
