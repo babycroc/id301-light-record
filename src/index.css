@@ -36,3 +36,8 @@ body,
   background-color: var(--background);
   overflow: hidden;
 }
+
+main {
+  height: calc(100vh - 108px);
+  overflow-y: scroll;
+}

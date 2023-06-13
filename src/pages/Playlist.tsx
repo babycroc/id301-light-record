@@ -89,6 +89,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 24px;
   margin: 16px 24px;
+  overflow-y: scroll;
 `;
 
 export const Playlist: React.FC = () => {
