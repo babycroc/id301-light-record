@@ -20,7 +20,12 @@ interface PieProps {
   // onTouchEnd?: React.TouchEventHandler<SVGUseElement>;
 }
 
-const PieContainer = styled.div<PieProps>`
+const PieContainer = styled.div.attrs((props) => ({
+  style: {
+    transform: `rotate(${props.degree}deg)`,
+    zIndex: `${props.top ? "10" : ""}`,
+  },
+}))`
   position: absolute;
   top: 144px;
   display: flex;
@@ -28,8 +33,6 @@ const PieContainer = styled.div<PieProps>`
   justify-content: flex-end;
   margin-left: 50%;
   transform-origin: bottom left;
-  transform: ${(props) => `rotate(${props.degree}deg)`};
-  z-index: ${(props) => (props.top ? "10" : "")};
 `;
 
 const Pie: React.FC<PieProps> = ({
@@ -46,7 +49,6 @@ const Pie: React.FC<PieProps> = ({
     </PieContainer>
   );
 };
-
 interface Props {
   type: "home" | "create";
   startDegree?: number;
@@ -77,18 +79,17 @@ export const Record: React.FC<Props> = ({
     return initDegree + PIE_DEGREE * (12 - position);
   };
 
-  const [_, setTime] = useState(Date.now());
   useEffect(() => {
+    if (!play) return;
     const interval = setInterval(() => {
-      const dDegree = PIE_DEGREE / 100;
-      setInitDegree(initDegree + (play ? dDegree : 0));
-      setTime(Date.now());
-    }, 1000 / 100);
+      const dDegree = PIE_DEGREE / 50;
+      setInitDegree((initDegree) => initDegree + (play ? dDegree : 0));
+    }, 5000 / 50);
 
     return () => {
       clearInterval(interval);
     };
-  }, [initDegree, play]);
+  }, [play]);
 
   useEffect(() => {
     if (type == "create") {
@@ -147,7 +148,7 @@ export const Record: React.FC<Props> = ({
 
   return (
     <Container>
-      {type == "home" ? (
+      {/* {type == "home" ? (
         <Pie
           degree={PIE_DEGREE * 9}
           color="none"
@@ -155,7 +156,7 @@ export const Record: React.FC<Props> = ({
           weight={10}
           top={true}
         />
-      ) : null}
+      ) : null} */}
       {type == "home"
         ? Array(PIE_NUM / 2 + 1)
             .fill(0)

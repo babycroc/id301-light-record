@@ -9,6 +9,7 @@ import { Icon } from "../components/Icon";
 import { PlayIcon, PauseIcon, StopIcon } from "../assets/icons";
 import { submit } from "../bluetooth";
 import { BluetoothState, useBluetoothState } from "../state/bluetooth";
+import { PIE_NUM } from "../consts";
 
 const Container = styled.div`
   position: relative;
@@ -48,9 +49,14 @@ export const Home: React.FC = () => {
           melody: data.melody,
         };
       });
-      if (playlist.length >= 1) setSong(playlist[0]);
+
+      const currentSong = localStorage.getItem("currentSong");
+      if (currentSong)
+        setSong(playlist.filter((v: Song) => v.id === currentSong)[0]);
+      else setSong(playlist[0]);
+      console.log(song);
     });
-  }, [docRef]);
+  }, []);
 
   const { characteristicCache } = useBluetoothState(
     (state: BluetoothState) => state
@@ -58,12 +64,20 @@ export const Home: React.FC = () => {
 
   const playRecord = () => {
     setPlay(true);
-    submit("PLAY", characteristicCache);
-  };
 
+    let melody = "";
+    for (let i = 0; i < PIE_NUM; i++) {
+      melody += song?.melody[i];
+    }
+    submit("PLAY " + melody, characteristicCache);
+  };
   const pauseRecord = () => {
     setPlay(false);
     submit("PAUSE", characteristicCache);
+  };
+  const stopRecord = () => {
+    setPlay(false);
+    submit("STOP", characteristicCache);
   };
 
   return (
@@ -78,7 +92,7 @@ export const Home: React.FC = () => {
           disabled={!play}
           onClick={pauseRecord}
         />
-        <Icon icon={StopIcon} size={48} />
+        <Icon icon={StopIcon} size={48} onClick={stopRecord} />
       </ControlContainer>
     </Container>
   );

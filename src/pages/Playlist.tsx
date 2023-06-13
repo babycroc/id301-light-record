@@ -58,11 +58,21 @@ const ControlContainer = styled.div`
 `;
 
 const PlaylistItem: React.FC<Props> = ({ song }) => {
+  const navigate = useNavigate();
+
+  const playMelody = () => {
+    localStorage.setItem("currentSong", song.id);
+    navigate("/");
+  };
+
   return (
     <Card>
       <Header>
-        {`${song.date.getFullYear()}.${song.date.getMonth()}.${song.date.getDate()}`}
+        {`${song.date.getFullYear()}.${
+          song.date.getMonth() + 1
+        }.${song.date.getDate()}`}
         <IconContainer>
+          <Icon icon={PlayIcon} onClick={playMelody} />
           <Icon icon={EditIcon} />
           <Icon icon={DeleteIcon} />
         </IconContainer>
@@ -74,11 +84,11 @@ const PlaylistItem: React.FC<Props> = ({ song }) => {
         ))}
       </CellContainer>
 
-      <ControlContainer>
+      {/* <ControlContainer>
         <Icon icon={PlayIcon} size={36} />
         <Icon icon={PauseIcon} size={36} />
         <Icon icon={StopIcon} size={36} />
-      </ControlContainer>
+      </ControlContainer> */}
     </Card>
   );
 };
