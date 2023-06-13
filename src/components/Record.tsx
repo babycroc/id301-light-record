@@ -20,12 +20,14 @@ interface PieProps {
   // onTouchEnd?: React.TouchEventHandler<SVGUseElement>;
 }
 
-const PieContainer = styled.div.attrs((props) => ({
-  style: {
-    transform: `rotate(${props.key}deg)`,
-    zIndex: `${props.id}`,
-  },
-}))`
+const PieContainer = styled.div.attrs<{ degree: number; top: boolean }>(
+  (props) => ({
+    style: {
+      transform: `rotate(${props.degree}deg)`,
+      zIndex: `${props.top ? "10" : ""}`,
+    },
+  })
+)`
   position: absolute;
   top: 144px;
   display: flex;
@@ -44,7 +46,7 @@ const Pie: React.FC<PieProps> = ({
   ...props
 }) => {
   return (
-    <PieContainer key={degree} id={top ? "10" : ""}>
+    <PieContainer degree={degree} top={top}>
       <PieSVG color={color} stroke={stroke} weight={weight} {...props} />
     </PieContainer>
   );
