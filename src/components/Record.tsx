@@ -5,6 +5,8 @@ import { PieSVG } from "../assets/svg/Pie";
 import { convertToHexColor } from "../utils";
 import { Color, Melody } from "../types";
 import { PIE_NUM, PIE_DEGREE } from "../consts";
+import { submit } from "../bluetooth";
+import { useBluetoothState } from "../state/bluetooth";
 
 interface PieProps {
   degree: number;
@@ -99,6 +101,7 @@ export const Record: React.FC<Props> = ({
     }
   }, [type, melody, startDegree]);
 
+  const { characteristicCache } = useBluetoothState((state) => state);
   const onDragOver = (event: React.DragEvent<SVGUseElement>) => {
     event.preventDefault();
   };
@@ -107,14 +110,20 @@ export const Record: React.FC<Props> = ({
     index: number
   ) => {
     const color = event.dataTransfer.getData("color");
-    if (setMelody)
-      setMelody(
-        melody.map((item, idx) =>
-          idx == index + Math.floor(initDegree / PIE_DEGREE)
-            ? (parseInt(color) as Color)
-            : item
-        )
+    if (setMelody) {
+      const newMelody = melody.map((item, idx) =>
+        idx == index + Math.floor(initDegree / PIE_DEGREE)
+          ? (parseInt(color) as Color)
+          : item
       );
+      setMelody(newMelody);
+
+      let melodyString = "";
+      for (let i = 0; i < 16; i++) {
+        melodyString += newMelody[i];
+      }
+      submit("MELODY ".concat(melodyString), characteristicCache);
+    }
   };
   // const onTouchMove = (event: React.TouchEvent<SVGUseElement>) => {
   //   event.preventDefault();
@@ -170,13 +179,9 @@ export const Record: React.FC<Props> = ({
               <Pie
                 key={index}
                 degree={calcDegreeFromPos(displayIndex)}
-                color={
-                  color == Color.NONE
-                    ? "var(--white)"
-                    : convertToHexColor(color)
-                }
-                stroke={color == Color.NONE ? "var(--black)" : "none"}
-                weight={color == Color.NONE ? 3 : 0}
+                color={convertToHexColor(color)}
+                stroke={color == Color.NONE ? "var(--gray)" : "none"}
+                weight={color == Color.NONE ? 2 : 0}
                 onDragOver={onDragOver}
                 onDrop={(event: React.DragEvent<SVGUseElement>) =>
                   onDrop(event, index)

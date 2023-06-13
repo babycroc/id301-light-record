@@ -24,11 +24,18 @@ export const convertToHexColor = (color: Color) => {
     case Color.PINK:
       hexColor = getComputedStyle(document.body).getPropertyValue("--pink");
       break;
-    case Color.NONE:
+    case Color.WHITE:
       hexColor = getComputedStyle(document.body).getPropertyValue("--white");
       break;
+    case Color.NONE:
+      hexColor = getComputedStyle(document.body).getPropertyValue(
+        "--background"
+      );
+      break;
     default:
-      hexColor = getComputedStyle(document.body).getPropertyValue("--white");
+      hexColor = getComputedStyle(document.body).getPropertyValue(
+        "--background"
+      );
       break;
   }
   return hexColor;

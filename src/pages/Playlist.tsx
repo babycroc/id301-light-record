@@ -4,11 +4,13 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { styled } from "styled-components";
 
 import { db } from "../firebase";
-import { Song } from "../types";
+import { Color, Song } from "../types";
 import { Card } from "../components/Card";
 import { Icon } from "../components/Icon";
 import { Cell } from "../components/Cell";
 import { Button } from "../components/Button";
+import { submit } from "../bluetooth";
+import { useBluetoothState } from "../state/bluetooth";
 import {
   EditIcon,
   DeleteIcon,
@@ -68,7 +70,7 @@ const PlaylistItem: React.FC<Props> = ({ song }) => {
 
       <CellContainer>
         {song.melody.map((color, index) => (
-          <Cell key={index} color={color} />
+          <Cell key={index} color={color} background={Color.WHITE} />
         ))}
       </CellContainer>
 
@@ -109,12 +111,19 @@ export const Playlist: React.FC = () => {
     });
   });
 
+  const { characteristicCache } = useBluetoothState((state) => state);
+
+  const createNewSong = () => {
+    submit("LED OFF", characteristicCache);
+    navigate("/playlist/create");
+  };
+
   return (
     <Container>
       {playlist.map((song, index) => (
         <PlaylistItem key={index} song={song} />
       ))}
-      <Button onClick={() => navigate("/playlist/create")}>
+      <Button onClick={createNewSong}>
         <AddIcon />
       </Button>
     </Container>

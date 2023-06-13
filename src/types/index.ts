@@ -6,6 +6,7 @@ export enum Color {
   "BLUE",
   "PURPLE",
   "PINK",
+  "WHITE",
   "NONE",
 }
 

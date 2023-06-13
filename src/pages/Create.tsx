@@ -1,12 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
 import { styled } from "styled-components";
 
+import { db } from "../firebase";
 import { Record } from "../components/Record";
 import { Color, Melody } from "../types";
 import { Cell } from "../components/Cell";
 import { CheckIcon } from "../assets/icons";
 import { Icon } from "../components/Icon";
 import { PIE_DEGREE, PIE_NUM } from "../consts";
+
+interface ControlProps {
+  saveMelody: () => void;
+}
 
 const ControlContainer = styled.div`
   position: absolute;
@@ -30,7 +37,7 @@ const IconContainer = styled.div`
   justify-content: center;
 `;
 
-const ControlDisplay: React.FC = () => {
+const ControlDisplay: React.FC<ControlProps> = ({ saveMelody }) => {
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     color: Color
@@ -49,11 +56,13 @@ const ControlDisplay: React.FC = () => {
     <ControlContainer>
       {Object.values(Color)
         .filter((v) => !isNaN(Number(v)))
+        // .filter((color) => color !== Color.NONE)
         .map((color, index) => (
           <Cell
             key={index}
             size={40}
             color={color as Color}
+            background={Color.NONE}
             draggable={true}
             onDragStart={(event: React.DragEvent<HTMLDivElement>) =>
               onDragStart(event, color as Color)
@@ -64,7 +73,7 @@ const ControlDisplay: React.FC = () => {
           />
         ))}
       <IconContainer>
-        <Icon icon={CheckIcon} size={24} />
+        <Icon icon={CheckIcon} size={24} onClick={saveMelody} />
       </IconContainer>
     </ControlContainer>
   );
@@ -82,7 +91,7 @@ const MelodyContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  padding: 48px 0 calc(100vh - 540px) 0;
+  padding: 48px 0 calc(100vh - 496px) 0;
   height: calc(100vh - 108px);
   overflow-y: scroll;
 `;
@@ -97,7 +106,12 @@ const MelodyCellDisplay: React.FC<MelodyCellProps> = ({ melody, onRotate }) => {
   return (
     <MelodyContainer onScroll={onScroll}>
       {melody.map((color, index) => (
-        <Cell key={index} size={cellSize} color={color as Color} />
+        <Cell
+          key={index}
+          size={cellSize}
+          color={color as Color}
+          background={Color.NONE}
+        />
       ))}
     </MelodyContainer>
   );
@@ -115,9 +129,16 @@ const Container = styled.div`
 export const Create: React.FC = () => {
   const [melody, setMelody] = useState<Melody>(Array(PIE_NUM).fill(Color.NONE));
   const [degree, setDegree] = useState(0);
+  const docRef = collection(db, "songs");
+  const navigate = useNavigate();
 
   const onRotate = (degree: number) => {
     setDegree(degree);
+  };
+
+  const saveMelody = () => {
+    addDoc(docRef, { date: new Date(), melody: melody });
+    navigate("/playlist");
   };
 
   return (
@@ -129,7 +150,7 @@ export const Create: React.FC = () => {
         startDegree={degree}
       />
       <MelodyCellDisplay melody={melody} onRotate={onRotate} />
-      <ControlDisplay />
+      <ControlDisplay saveMelody={saveMelody} />
     </Container>
   );
 };
