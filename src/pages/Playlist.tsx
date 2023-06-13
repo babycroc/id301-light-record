@@ -15,8 +15,8 @@ import {
   EditIcon,
   DeleteIcon,
   PlayIcon,
-  PauseIcon,
-  StopIcon,
+  // PauseIcon,
+  // StopIcon,
   AddIcon,
 } from "../assets/icons";
 
@@ -49,13 +49,13 @@ const CellContainer = styled.div`
   overflow: scroll;
 `;
 
-const ControlContainer = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 16px;
-`;
+// const ControlContainer = styled.div`
+//   position: relative;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+//   gap: 16px;
+// `;
 
 const PlaylistItem: React.FC<Props> = ({ song }) => {
   const navigate = useNavigate();
